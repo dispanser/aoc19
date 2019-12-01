@@ -5,8 +5,6 @@ import System.IO (readFile)
 main :: IO ()
 main = do
     ls <- lines <$> readFile "data/d1m1.txt"
-    -- let xs = (read :: String -> Int) <$> lines
-    -- vals <- readFile "data/d1m1.txt"
     let ws = (read :: String -> Int) <$> ls
     print . sum $ map fuel ws
 

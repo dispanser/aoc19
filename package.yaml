@@ -47,3 +47,16 @@ benchmarks:
     dependencies:
       - aoc19
       - criterion
+executables:
+    aoc:
+        source-dirs: aoc
+        main: AdventOfCode.hs
+        dependencies:
+            - aoc19 
+        ghc-options:
+            - -threaded
+            - -rtsopts
+            - -with-rtsopts=-N
+            - -main-is AdventOfCode
+
+
