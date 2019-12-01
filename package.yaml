@@ -1,0 +1,49 @@
+name: aoc19
+version: '0.0.0'
+category: template
+synopsis: Advent of Code, 2019 edition
+description: >
+  Advent of Code, 2019 edition
+author: Thomas Peiselt
+github: dispanser/aoc19
+license: Unlicense
+
+ghc-options: -Wall
+dependencies:
+  - base >= 4.8.0 && <5
+
+library:
+  source-dirs: src
+  dependencies:
+    # - random
+    - containers
+    - unordered-containers
+    - hashable
+    # - microlens
+    # - Chart
+
+tests:
+  tasty:
+    source-dirs: tasty
+    main: TastyTests.hs
+    dependencies:
+      - aoc19
+      - containers
+      - unordered-containers
+      - hspec
+      - QuickCheck
+      - test-invariant
+      - tasty
+      - tasty-quickcheck
+      - tasty-hunit
+      - tasty-hspec
+
+benchmarks:
+  benchmark-criterion:
+    main: Bench.hs
+    source-dirs: bench
+    ghc-options:
+      - -threaded
+    dependencies:
+      - aoc19
+      - criterion
