@@ -53,6 +53,7 @@ executables:
         main: AdventOfCode.hs
         dependencies:
             - aoc19 
+            - bytestring
         ghc-options:
             - -threaded
             - -rtsopts
