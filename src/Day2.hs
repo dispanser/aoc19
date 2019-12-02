@@ -1,10 +1,12 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Day2 where
 
+import qualified Data.Vector.Generic as G
+import Data.Vector.Generic ((!), (//))
 import Data.Vector.Unboxed.Mutable (STVector)
-import Data.Vector.Unboxed ((!), (//))
 import qualified Data.Vector.Unboxed as V
 import Debug.Trace (trace)
 
@@ -23,14 +25,14 @@ data Mod = Mod { pos :: Int
 -- 2
 -- >>> solve (V.fromList [1,1,1,4,99,5,6,0,99])
 -- 30
-solve :: Intcode -> Int
+solve :: G.Vector v Int => v Int -> Int
 solve = go 0
  where go p ic = case evalAt p ic of
-                   Halt -> V.head ic
+                   Halt -> G.head ic
                    m    -> go (p+4) (applyMod ic m)
 
 -- | day 2, part 2: iterate a space of potential inputs to produce a specific result
-findInputs :: V.Vector Int -> Int -> [Int]
+findInputs :: G.Vector v Int => v Int -> Int -> [Int]
 findInputs ic expected =
     [ 100 * noun + verb | noun <- [0..99],
                           verb <- [0..99],
@@ -46,7 +48,7 @@ findInputs ic expected =
 -- Mod {pos = 3, val = 102}
 -- >>> evalAt 0 $ V.fromList [2, 5, 3, 4, -1, 99]
 -- Mod {pos = 4, val = 396}
-evalAt :: Int -> Intcode -> Mod
+evalAt :: G.Vector v Int => Int -> v Int -> Mod
 evalAt at ic =
     let op  = ic ! at
         v1  = ic ! (ic ! (at + 1))
@@ -58,7 +60,7 @@ evalAt at ic =
          99 -> Halt
          o  -> error $ "unexpected op code" ++ show o
 
-applyMod :: Intcode -> Mod -> Intcode
+applyMod :: G.Vector v Int => v Int -> Mod -> v Int
 applyMod ic Halt = ic
 applyMod ic Mod { .. } = ic // [(pos, val)]
 
