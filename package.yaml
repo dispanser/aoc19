@@ -19,34 +19,19 @@ library:
     - containers
     - unordered-containers
     - hashable
+    - vector
     # - microlens
     # - Chart
 
 tests:
-  tasty:
-    source-dirs: tasty
-    main: TastyTests.hs
+  doctest:
+    main: doctest-driver.hs
+    source-dirs:
+      - test/doctest
     dependencies:
-      - aoc19
-      - containers
-      - unordered-containers
-      - hspec
-      - QuickCheck
-      - test-invariant
-      - tasty
-      - tasty-quickcheck
-      - tasty-hunit
-      - tasty-hspec
+      - doctest
+      - doctest-discover
 
-benchmarks:
-  benchmark-criterion:
-    main: Bench.hs
-    source-dirs: bench
-    ghc-options:
-      - -threaded
-    dependencies:
-      - aoc19
-      - criterion
 executables:
     aoc:
         source-dirs: aoc
@@ -54,6 +39,8 @@ executables:
         dependencies:
             - aoc19 
             - bytestring
+            - split
+            - vector
         ghc-options:
             - -threaded
             - -rtsopts

@@ -1,0 +1,1 @@
+--command "stack ghci --nix aoc19:lib aoc19:exe:aoc --main-is aoc19:exe:aoc"
