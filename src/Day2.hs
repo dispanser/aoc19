@@ -23,12 +23,18 @@ data Mod = Mod { pos :: Int
 -- 2
 -- >>> solve (V.fromList [1,1,1,4,99,5,6,0,99])
 -- 30
-
 solve :: Intcode -> Int
 solve = go 0
  where go p ic = case evalAt p ic of
                    Halt -> V.head ic
                    m    -> go (p+4) (applyMod ic m)
+
+-- | day 2, part 2: iterate a space of potential inputs to produce a specific result
+findInputs :: V.Vector Int -> Int -> [Int]
+findInputs ic expected =
+    [ 100 * noun + verb | noun <- [0..99],
+                          verb <- [0..99],
+                          solve (ic // [(1, noun), (2, verb)]) == expected]
 
 -- | evaluate an @intcode@ program at a specific position, and produce a result
 --

@@ -24,6 +24,7 @@ day2 = do
     intCodeIn  <- fromList <$> readIntList "data/day2.txt"
     let intCodeMod = intCodeIn // [(1, 12), (2, 2)]
     putStrLn $ "day 2, part #1: " ++ (show $ Day2.solve intCodeMod)
+    putStrLn $ "day 2, part #2: " ++ (show $ Day2.findInputs intCodeIn 19690720)
 
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do
