@@ -6,6 +6,7 @@ import qualified D1M2
 import qualified D1M1
 import qualified Data.List.Split as S
 import qualified Day2
+import qualified Day3
 import Data.Vector.Unboxed (fromList, (//))
 
 main :: IO ()
@@ -26,6 +27,10 @@ day2 = do
     putStrLn $ "day 2, part #1: " ++ (show $ Day2.solve intCodeMod)
     putStrLn $ "day 2, part #2: " ++ (show $ Day2.findInputs intCodeIn 19690720)
 
+day3 :: IO ()
+day3 = do
+    wires <- lines <$> readFile "data/day3.txt"
+    putStrLn $ "day 3, part #1: " ++ (show $ Day3.solve (wires !! 0) (wires !! 1))
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do
     ls <- lines <$> readFile f
