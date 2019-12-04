@@ -4,6 +4,7 @@
 
 module Day3 where
 
+import Data.List (sortOn)
 import qualified Data.List.Split as S
 import Data.Hashable (Hashable)
 import qualified Data.HashSet as HS
@@ -53,22 +54,23 @@ tilesOnPath :: [Move] -> HS.HashSet Pos
 tilesOnPath = go (Pos 0 0) HS.empty
   where
     go startPos aggr (m:ms) =
-        let (endPos, pss) = tilesOnMove startPos m
+        let (endPos, pss) = cellsInMove startPos m
             aggr'         = foldl' (flip HS.insert) aggr pss
         in go endPos aggr' ms
     go _ aggr []            = aggr
 -- | compute the set of visited cells for a move starting at a given position
 --
--- >>> tilesOnMove (Pos 2 1) (D 2)
--- (Pos {x = 2, y = -1},[Pos {x = 2, y = -1},Pos {x = 2, y = 0},Pos {x = 2, y = 1}])
-tilesOnMove :: Pos -> Move -> (Pos, [Pos])
-tilesOnMove start@Pos{..} move =
+-- >>> cellsInMove (Pos 2 1) (D 2)
+-- (Pos {x = 2, y = -1},[Pos {x = 2, y = 1},Pos {x = 2, y = 0},Pos {x = 2, y = -1}])
+cellsInMove :: Pos -> Move -> (Pos, [Pos])
+cellsInMove start@Pos{..} move =
     let dest@(Pos x' y') = moveDestination start move
         minX = min x x'
         maxX = max x x'
         minY = min y y'
         maxY = max y y'
-    in (dest, [Pos vx vy | vx <- [minX .. maxX], vy <- [minY .. maxY]])
+        cells = [Pos vx vy | vx <- [minX .. maxX], vy <- [minY .. maxY]]
+    in (dest, sortOn (manhattan start) cells)
 
 -- | compute the end position for a given a start position and a move.
 --
