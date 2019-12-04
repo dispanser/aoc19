@@ -29,14 +29,14 @@ instance Hashable Pos
 
 -- |
 --
--- >>> solve "R75,D30,R83,U83,L12,D49,R71,U7,L72" "U62,R66,U55,R34,D71,R55,D58,R83"
+-- >>> part1 "R75,D30,R83,U83,L12,D49,R71,U7,L72" "U62,R66,U55,R34,D71,R55,D58,R83"
 -- 159
--- >>> solve "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51" "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7"
+-- >>> part1 "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51" "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7"
 -- 135
-solve :: String -> String -> Int
-solve wire1 wire2 =
-    let wire1Cells = tilesOnPath $ parseWirePath wire1
-        wire2Cells = tilesOnPath $ parseWirePath wire2
+part1 :: String -> String -> Int
+part1 wire1 wire2 =
+    let wire1Cells = HS.fromList . map fst . tilesOnPath $ parseWirePath wire1
+        wire2Cells = HS.fromList . map fst . tilesOnPath $ parseWirePath wire2
         crossings  = HS.intersection wire1Cells wire2Cells
         distances  = HS.map (manhattan (Pos 0 0)) crossings
     in minimum distances
@@ -50,14 +50,18 @@ solve wire1 wire2 =
 manhattan :: Pos -> Pos -> Int
 manhattan (Pos x y) (Pos x' y') = abs (x - x') + abs (y - y')
 
-tilesOnPath :: [Move] -> HS.HashSet Pos
-tilesOnPath = go (Pos 0 0) HS.empty
+-- | produce a list of visited cells in order of traversal
+--
+-- >>> tilesOnPath [D 2, L 2]
+-- [(Pos {x = 0, y = -1},1),(Pos {x = 0, y = -2},2),(Pos {x = -1, y = -2},3),(Pos {x = -2, y = -2},4)]
+tilesOnPath :: [Move] -> [(Pos, Int)]
+tilesOnPath = go 0 (Pos 0 0)
   where
-    go startPos aggr (m:ms) =
+    go wireLen startPos (m:ms) =
         let (endPos, pss) = cellsInMove startPos m
-            aggr'         = foldl' (flip HS.insert) aggr pss
-        in go endPos aggr' ms
-    go _ aggr []            = aggr
+            indexedPos    = pss `zip` [wireLen + 1 .. ]
+        in indexedPos ++ go (wireLen + length pss) endPos ms
+    go _ _ [] = []
 -- | compute the set of visited cells for a move starting at a given position
 --
 -- >>> cellsInMove (Pos 2 1) (D 2)
