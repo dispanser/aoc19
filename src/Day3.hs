@@ -8,6 +8,7 @@ import Data.List (sortOn)
 import qualified Data.List.Split as S
 import Data.Hashable (Hashable)
 import qualified Data.HashSet as HS
+import qualified Data.HashMap.Strict as HM
 import GHC.Generics (Generic)
 import Data.Foldable (foldl')
 
@@ -40,6 +41,27 @@ part1 wire1 wire2 =
         crossings  = HS.intersection wire1Cells wire2Cells
         distances  = HS.map (manhattan (Pos 0 0)) crossings
     in minimum distances
+
+-- >>> part2 "R75,D30,R83,U83,L12,D49,R71,U7,L72" "U62,R66,U55,R34,D71,R55,D58,R83"
+-- 610
+-- >>> part2 "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51" "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7"
+-- 410
+part2 :: String -> String -> Int
+part2 wire1 wire2 =
+    let wireCells1 = distancePerCell . tilesOnPath $ parseWirePath wire1
+        wireCells2 = distancePerCell . tilesOnPath $ parseWirePath wire2
+        crossings  = HS.toList $ HS.intersection (HM.keysSet wireCells1) (HM.keysSet wireCells2)
+        weights k  = wireCells1  HM.! k + wireCells2 HM.! k
+        distances  = weights <$> crossings
+    in minimum distances
+
+-- | create a map from each distinct position to the smallest distance
+-- TODO: this seems very generic, adapt type signature
+--
+-- >>> distancePerCell [(Pos {x = 0, y = -1},1),(Pos {x = 0, y = -2},7),(Pos {x = 0, y = -1},3),(Pos {x = 0, y = -2},4)]
+-- fromList [(Pos {x = 0, y = -2},4),(Pos {x = 0, y = -1},1)]
+distancePerCell :: [(Pos, Int)] -> HM.HashMap Pos Int
+distancePerCell = foldl' (\hm (k, v) -> HM.insertWith min k v hm) HM.empty
 
 -- | manhattan distance: distance on grid
 --

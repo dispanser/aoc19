@@ -30,7 +30,9 @@ day2 = do
 day3 :: IO ()
 day3 = do
     wires <- lines <$> readFile "data/day3.txt"
-    putStrLn $ "day 3, part #1: " ++ (show $ Day3.solve (wires !! 0) (wires !! 1))
+    putStrLn $ "day 3, part #1: " ++ show ( Day3.part1 (head wires) (wires !! 1))
+    putStrLn $ "day 3, part #2: " ++ show ( Day3.part2 (head wires) (wires !! 1))
+
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do
     ls <- lines <$> readFile f
