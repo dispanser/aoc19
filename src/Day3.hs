@@ -37,7 +37,7 @@ solve :: String -> String -> Int
 solve wire1 wire2 =
     let wire1Cells = tilesOnPath $ parseWirePath wire1
         wire2Cells = tilesOnPath $ parseWirePath wire2
-        crossings  = HS.delete (Pos 0 0) $ HS.intersection wire1Cells wire2Cells
+        crossings  = HS.intersection wire1Cells wire2Cells
         distances  = HS.map (manhattan (Pos 0 0)) crossings
     in minimum distances
 
@@ -61,7 +61,7 @@ tilesOnPath = go (Pos 0 0) HS.empty
 -- | compute the set of visited cells for a move starting at a given position
 --
 -- >>> cellsInMove (Pos 2 1) (D 2)
--- (Pos {x = 2, y = -1},[Pos {x = 2, y = 1},Pos {x = 2, y = 0},Pos {x = 2, y = -1}])
+-- (Pos {x = 2, y = -1},[Pos {x = 2, y = 0},Pos {x = 2, y = -1}])
 cellsInMove :: Pos -> Move -> (Pos, [Pos])
 cellsInMove start@Pos{..} move =
     let dest@(Pos x' y') = moveDestination start move
@@ -70,7 +70,7 @@ cellsInMove start@Pos{..} move =
         minY = min y y'
         maxY = max y y'
         cells = [Pos vx vy | vx <- [minX .. maxX], vy <- [minY .. maxY]]
-    in (dest, sortOn (manhattan start) cells)
+    in (dest, tail $ sortOn (manhattan start) cells)
 
 -- | compute the end position for a given a start position and a move.
 --
