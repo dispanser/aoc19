@@ -25,8 +25,8 @@ day2 :: IO ()
 day2 = do
     intCodeIn  <- fromList <$> readIntList "data/day2.txt"
     let intCodeMod = intCodeIn // [(1, 12), (2, 2)]
-    putStrLn $ "day 2, part #1: " ++ (show $ Day2.solve intCodeMod)
-    putStrLn $ "day 2, part #2: " ++ (show $ Day2.findInputs intCodeIn 19690720)
+    putStrLn $ "day 2, part #1: " ++ (show $ Day2.part1 intCodeMod)
+    putStrLn $ "day 2, part #2: " ++ (show $ Day2.part2 intCodeIn 19690720)
 
 day3 :: IO ()
 day3 = do
