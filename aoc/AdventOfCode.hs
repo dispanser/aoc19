@@ -7,6 +7,7 @@ import qualified D1M1
 import qualified Data.List.Split as S
 import qualified Day2
 import qualified Day3
+import qualified Day4
 import Data.Vector.Unboxed (fromList, (//))
 
 main :: IO ()
@@ -32,6 +33,11 @@ day3 = do
     wires <- lines <$> readFile "data/day3.txt"
     putStrLn $ "day 3, part #1: " ++ show ( Day3.part1 (head wires) (wires !! 1))
     putStrLn $ "day 3, part #2: " ++ show ( Day3.part2 (head wires) (wires !! 1))
+
+day4 :: IO ()
+day4 = do
+    putStrLn $ "day4, part #1: " ++ show (Day4.part1 245182 790572)
+    putStrLn $ "day4, part #2: " ++ show (Day4.part2 245182 790572)
 
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do
