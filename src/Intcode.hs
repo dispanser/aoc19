@@ -30,6 +30,8 @@ data Op = Add { p1  :: Param
               , out :: Param }
         | Store { p1 :: Param }
         | Read  { p1 :: Param }
+        | IfTrue { cond :: Param
+                 , jump :: Param }
         | Term
         deriving (Eq, Show)
 
@@ -74,8 +76,6 @@ runProgram ic =
 -- (Output 17,IState {mem = [4,3,2,17], ip = 2, inputQueue = []})
 -- >>> step $ initialize (V.fromList [4, 3, 2, 17]) `withInputs` [1,2,3]
 -- (Output 17,IState {mem = [4,3,2,17], ip = 2, inputQueue = [1,2,3]})
--- >>> step $ initialize (V.fromList [3, 3, 2, 2]) `withInputs` [101, 17, 16]
--- (Input 101,IState {mem = [3,3,101,2], ip = 2, inputQueue = [17,16]})
 step :: IState -> (Action, IState)
 step is@IState {..} =
     let (ip', instruction) = readOp is
@@ -95,7 +95,6 @@ step is@IState {..} =
                          in (Input val, is { ip = ip'
                                            , mem = mem'
                                            , inputQueue = tail inputQueue })
-             -- let outVal = e -- extend IState to have a list of inputs as third arg?
 
 -- | read a parameter from a program
 --
@@ -122,21 +121,19 @@ evalParam _  (Param Direct value ) = value
 -- >>> readOp $ initialize $ V.fromList [4, 917, 80, 1]
 -- (2,Read {p1 = Param {mode = MemAddr, value = 917}})
 readOp :: IState -> (Int, Op)
-readOp IState { .. } =
+readOp is@IState { .. } =
     let (mode, opcode) = (mem ! ip) `divMod` 100
+        param = readParam is mode
     in case opcode of
          99 -> (ip + 1, Term)
-         1  -> (ip + 4, Add
-             { p1 =  Param (paramMode mode 0) $ mem ! (ip + 1)
-             , p2 =  Param (paramMode mode 1) $ mem ! (ip + 2)
-             , out = Param (paramMode mode 2) $ mem ! (ip + 3) })
-         2  -> (ip + 4, Mul
-             { p1 =  Param (paramMode mode 0) $ mem ! (ip + 1)
-             , p2 =  Param (paramMode mode 1) $ mem ! (ip + 2)
-             , out = Param (paramMode mode 2) $ mem ! (ip + 3) })
+         1  -> (ip + 4, Add { p1 =  param 0 , p2 =  param 1 , out = param 2 })
+         2  -> (ip + 4, Mul { p1 =  param 0 , p2 =  param 1 , out = param 2 })
          3  -> (ip + 2, Store $ Param Direct $ mem ! (ip + 1))
-         4  -> (ip + 2, Read  $ Param (paramMode mode 0) $ mem ! (ip + 1))
+         4  -> (ip + 2, Read $ param 0)
          _  -> error $ "unsupported operation: " ++ show opcode
+
+readParam :: IState  -> Int -> Int -> Param
+readParam IState { .. } mode idx = Param (paramMode mode idx) $ mem ! (ip + idx + 1)
 
 paramMode :: Int -> Int -> Mode
 paramMode mode pos =
