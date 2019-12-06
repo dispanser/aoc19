@@ -13,20 +13,23 @@ import Data.Vector.Unboxed (fromList, (//))
 main :: IO ()
 main = do
     day1
+    day2
+    day3
+    day4
 
 
 day1 :: IO ()
 day1 = do
     ws <- readIntLines "data/d1m1.txt"
-    putStrLn $ "day 1, part #1: " ++ (show $ sum $ map D1M1.fuel ws)
-    putStrLn $ "day 1, part #2: " ++ (show $ sum $ map D1M2.fuel ws)
+    putStrLn $ "day 1, part #1: " ++ show (sum $ map D1M1.fuel ws)
+    putStrLn $ "day 1, part #2: " ++ show (sum $ map D1M2.fuel ws)
 
 day2 :: IO ()
 day2 = do
     intCodeIn  <- fromList <$> readIntList "data/day2.txt"
     let intCodeMod = intCodeIn // [(1, 12), (2, 2)]
-    putStrLn $ "day 2, part #1: " ++ (show $ Day2.part1 intCodeMod)
-    putStrLn $ "day 2, part #2: " ++ (show $ Day2.part2 intCodeIn 19690720)
+    putStrLn $ "day 2, part #1: " ++ show (Day2.part1' intCodeMod)
+    putStrLn $ "day 2, part #2: " ++ show (Day2.part2' intCodeIn 19690720)
 
 day3 :: IO ()
 day3 = do

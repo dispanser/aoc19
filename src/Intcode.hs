@@ -40,20 +40,22 @@ initialize = flip IState 0
 -- | run an @intcode@ program, return the list of actions
 --
 -- >>> runProgram (V.fromList [1,11,12,3,2,3,13,0,4,0,99,30,40,50])
--- [Output 3500,Terminate]
+-- ([Output 3500,Terminate],3500)
 -- >>> runProgram (V.fromList [1,0,0,0,4,0,99])
--- [Output 2,Terminate]
+-- ([Output 2,Terminate],2)
 -- >>> runProgram (V.fromList [1,1,1,4,99,5,6,0,4,0,99])
--- [Output 30,Terminate]
-runProgram :: V.Vector Int -> [Action]
-runProgram ic = go start
+-- ([Output 30,Terminate],30)
+runProgram :: V.Vector Int -> ([Action], Int)
+runProgram ic =
+    let (actions, finalState) = go start
+    in (actions, V.head $ mem finalState)
  where start = initialize ic
        go is = let (action, newState) = step is
-                   next = go newState
+                   (next, finalState) = go newState
                in case action of
-                    Terminate -> [Terminate]
-                    None      -> next
-                    a         -> a : next
+                    Terminate -> ([Terminate], newState)
+                    None      -> (next, finalState)
+                    a         -> (a : next, finalState)
 
 -- | advancing an intcode programm by one step.
 --
@@ -78,6 +80,7 @@ step is@IState {..} =
                        in (None, IState { ip = ip' , mem = mem'})
          Read { .. } -> let outVal = evalParam is p1
                         in (Output outVal, is { ip = ip' })
+         -- Store { .. } -> let outVal = e -- extend IState to have a list of inputs as third arg?
 
 -- | read a parameter from a program
 --
@@ -112,8 +115,8 @@ readOp IState { .. } =
              { p1 =  Param (paramMode mode 0) $ mem ! (ip + 1)
              , p2 =  Param (paramMode mode 1) $ mem ! (ip + 2)
              , out = Param (paramMode mode 2) $ mem ! (ip + 3) })
-         3  -> error "unsupported operation: Store"
-         4  -> (ip + 2, Read $ Param (paramMode mode 0) $ mem ! (ip + 1))
+         3  -> (ip + 2, Store $ Param (paramMode mode 0) $ mem ! (ip + 1))
+         4  -> (ip + 2, Read  $ Param (paramMode mode 0) $ mem ! (ip + 1))
          -- _  -> error "unsupported operation: " ++ show opcode
 
 paramMode :: Int -> Int -> Mode
