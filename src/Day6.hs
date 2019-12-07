@@ -34,10 +34,16 @@ import Data.HashMap.Lazy as HM ((!))
 -- >>> part1 ["COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I", "E)J", "J)K", "K)L"]
 -- 42
 part1 :: [String] -> Int
-part1 inputs = HM.foldl' (+) 0 orbits
+part1 inputs = HM.foldl' (+) 0 $ orbits
   where parentRel = parseInput inputs
-        orbits :: HM.HashMap String Int
-        orbits = HM.singleton "COM" 0 <> HM.map (\k -> 1 + (orbits ! k)) parentRel
+        orbits    = computeOrbits parentRel
+
+-- >>> HM.toList $ parseInput ["COM)ABC", "ABC)DEF"]
+-- [("COM",0),("ABC",1), ("DEF", 2)]
+computeOrbits :: HM.HashMap String String -> HM.HashMap String Int
+computeOrbits parentRel =
+    let orbits = HM.singleton "COM" 0 <> HM.map (\k -> 1 + (orbits ! k)) parentRel
+    in orbits
 
 -- | parse inputs of day 6, list of strings of the form "xyz)abc" where abc orbits around xyz.
 --
