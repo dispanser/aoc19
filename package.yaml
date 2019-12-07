@@ -21,6 +21,7 @@ library:
     - hashable
     - vector
     - split
+    - monad-extras
     # - microlens
     # - Chart
 

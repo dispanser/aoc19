@@ -54,6 +54,7 @@ day6 :: IO ()
 day6 = do
     input  <- lines <$> readFile "data/day6.txt"
     putStrLn $ "day 6, part #1: " ++ show (Day6.part1 input)
+    putStrLn $ "day 6, part #2: " ++ show (Day6.part2 input)
 
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do
