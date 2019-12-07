@@ -5,7 +5,6 @@ module Intcode where
 
 import Data.Vector.Generic ((!), (//))
 import qualified Data.Vector.Unboxed as V
-import Debug.Trace (trace, traceShow)
 
 -- | the state of the intcode interpreter: memory, instruction pointer, queue of provided inputs
 data IState = IState { mem :: V.Vector Int
@@ -211,9 +210,4 @@ paramMode mode pos =
 data Mod = Mod { pos :: Int
                , val :: Int }
          | Halt deriving (Show, Eq)
-
-debugShow :: Show a => String -> a -> a
-debugShow prefix v =
-    let msg = prefix ++ " " ++ show v
-    in trace msg v
 
