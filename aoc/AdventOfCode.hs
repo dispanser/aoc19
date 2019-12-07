@@ -35,8 +35,8 @@ day2 = do
 day3 :: IO ()
 day3 = do
     wires <- lines <$> readFile "data/day3.txt"
-    putStrLn $ "day 3, part #1: " ++ show ( Day3.part1 (head wires) (wires !! 1))
-    putStrLn $ "day 3, part #2: " ++ show ( Day3.part2 (head wires) (wires !! 1))
+    putStrLn $ "day 3, part #1: " ++ show (Day3.part1 (head wires) (wires !! 1))
+    putStrLn $ "day 3, part #2: " ++ show (Day3.part2 (head wires) (wires !! 1))
 
 day4 :: IO ()
 day4 = do
@@ -47,6 +47,7 @@ day5 :: IO ()
 day5 = do
     intCodeIn  <- fromList <$> readIntList "data/day5.txt"
     putStrLn $ "day 5, part #1: " ++ show (Day5.part1 intCodeIn [1])
+    putStrLn $ "day 5, part #2: " ++ show (Day5.part1 intCodeIn [5])
 
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do
