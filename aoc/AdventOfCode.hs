@@ -10,6 +10,8 @@ import qualified Day3
 import qualified Day4
 import qualified Day5
 import qualified Day6
+import qualified Day7
+import qualified Day8
 import Data.Vector.Unboxed (fromList, (//))
 
 main :: IO ()
@@ -55,6 +57,17 @@ day6 = do
     input  <- lines <$> readFile "data/day6.txt"
     putStrLn $ "day 6, part #1: " ++ show (Day6.part1 input)
     putStrLn $ "day 6, part #2: " ++ show (Day6.part2 input)
+
+day7 :: IO ()
+day7 = do
+    intCodeIn  <- fromList <$> readIntList "data/day7.txt"
+    putStrLn $ "day 7, part #1: " ++ show (Day7.part1 intCodeIn)
+
+day8 :: IO ()
+day8 = do
+    input <- readFile "data/day8.txt"
+    putStrLn $ "day 8, part #1: " ++ show (Day8.part1 6 25 $ init input)
+
 
 readIntLines :: FilePath -> IO [Int]
 readIntLines f = do

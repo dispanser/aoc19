@@ -8,6 +8,10 @@
      10k int code programs
 - [x] Day3: wire routing
 - [x] Day4: finding the number of possible passwords
+- [x] Day5
+- [x] Day6
+- [x] Day7, part1
+- [x] Day8, part1
 
 
 
