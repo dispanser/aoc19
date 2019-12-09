@@ -1,7 +1,5 @@
 module Day6 where
 
-import Debug.Trace (trace, traceShow)
-
 -- Ok, getting started:
 -- - this is a DAG
 -- - we need to represent the parent / child relationship
@@ -90,8 +88,3 @@ parseInput :: [String] -> HM.HashMap String String
 parseInput inputs = HM.fromList $ parseLine <$> inputs
   where parseLine l = let [child,parent] = splitOn ")" l
                       in (parent, child)
-
-debugShow :: Show a => String -> a -> a
-debugShow prefix v =
-    let msg = prefix ++ " " ++ show v
-    in trace msg v

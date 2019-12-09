@@ -1,9 +1,11 @@
 module Day8 where
 
-import Data.Char (digitToInt)
+import Data.Maybe (listToMaybe, fromMaybe)
+import Data.Char (digitToInt, intToDigit)
 import Data.List.Split (chunksOf)
 import Data.List (sortOn)
 import qualified Data.Vector.Unboxed as V
+import Data.Vector.Unboxed ((!))
 
 newtype Layer = Layer {unlayer :: V.Vector Int} deriving (Eq, Show)
 
@@ -21,6 +23,16 @@ part1 rows cols inp =
         zeroLayer = head $ sortOn (countDigit 0) layers
     in countDigit 1 zeroLayer * countDigit 2 zeroLayer
 
+-- | Day 8, part 2: find the defining pixel (ignoring transparent ones)
+--
+-- >>> part2 2 2 "0222112222120000"
+-- "0110"
+part2 :: Int -> Int -> String -> String
+part2 rows cols inp =
+    let layers   = decodeStream rows cols inp
+        pixels n = (! n) . unlayer <$> layers
+        pixel    = fromMaybe 2 . listToMaybe . filter (/= 2)
+    in intToDigit . pixel . pixels <$> [0 .. rows * cols - 1]
 -- | count occurrences of given digit in the layer
 --
 -- >>> countDigit 5 $ Layer $ V.fromList [5,5,4,1,1,1]
