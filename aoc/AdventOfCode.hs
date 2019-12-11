@@ -12,7 +12,7 @@ import qualified Day5
 import qualified Day6
 import qualified Day7
 import qualified Day8
-import Data.Vector.Unboxed (fromList, (//))
+import qualified Day9
 
 main :: IO ()
 main = do
@@ -20,7 +20,10 @@ main = do
     day2
     day3
     day4
-
+    day5
+    day6
+    day7
+    day8
 
 day1 :: IO ()
 day1 = do
@@ -30,8 +33,8 @@ day1 = do
 
 day2 :: IO ()
 day2 = do
-    intCodeIn  <- fromList <$> readIntList "data/day2.txt"
-    let intCodeMod = intCodeIn // [(1, 12), (2, 2)]
+    intCodeIn  <- readIntList "data/day2.txt"
+    let intCodeMod = head intCodeIn : 12 : 2 : drop 3 intCodeIn
     putStrLn $ "day 2, part #1: " ++ show (Day2.part1 intCodeMod)
     putStrLn $ "day 2, part #2: " ++ show (Day2.part2 intCodeIn 19690720)
 
@@ -48,7 +51,7 @@ day4 = do
 
 day5 :: IO ()
 day5 = do
-    intCodeIn  <- fromList <$> readIntList "data/day5.txt"
+    intCodeIn  <- readIntList "data/day5.txt"
     putStrLn $ "day 5, part #1: " ++ show (Day5.part1 intCodeIn [1])
     putStrLn $ "day 5, part #2: " ++ show (Day5.part1 intCodeIn [5])
 
@@ -60,7 +63,7 @@ day6 = do
 
 day7 :: IO ()
 day7 = do
-    intCodeIn  <- fromList <$> readIntList "data/day7.txt"
+    intCodeIn  <- readIntList "data/day7.txt"
     putStrLn $ "day 7, part #1: " ++ show (Day7.part1 intCodeIn)
 
 day8 :: IO ()
@@ -68,6 +71,13 @@ day8 = do
     input <- readFile "data/day8.txt"
     putStrLn $ "day 8, part #1: " ++ show (Day8.part1 6 25 $ init input)
     putStrLn $ "day 8, part #2: " ++ show (Day8.part2 6 25 $ init input)
+
+day9 :: IO ()
+day9 = do
+    intCodeIn  <- readIntList "data/day9.txt"
+    putStrLn $ "day 9, part #1: " ++ show (Day9.part1 intCodeIn)
+    putStrLn $ "day 9, part #2: " ++ show (Day9.part2 intCodeIn)
+
 
 
 readIntLines :: FilePath -> IO [Int]

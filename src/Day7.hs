@@ -3,7 +3,6 @@ module Day7 where
 import Data.List (permutations)
 import qualified Data.Vector.Unboxed as V
 import qualified Intcode as I
-import Debug.Trace (trace)
 
 
 -- |
@@ -48,8 +47,3 @@ evaluate prev ic (x:xs) =
 isOutput :: I.Action -> Bool
 isOutput (I.Output _) = True
 isOutput _          = False
-
-debugShow :: Show a => String -> a -> a
-debugShow prefix v =
-    let msg = prefix ++ " " ++ show v
-    in trace msg v

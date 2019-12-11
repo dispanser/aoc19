@@ -4,8 +4,6 @@
 module Day2 where
 
 import qualified Intcode as I
-import qualified Data.Vector.Unboxed as V
-import Data.Vector.Generic ((//))
 
 part1 :: [Int] -> Int
 part1 = snd . I.runProgram . I.initialize
